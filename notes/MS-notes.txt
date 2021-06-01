@@ -1,0 +1,102 @@
+--Web service (WS)
+	--designed for machine to machine(application to application) interaction.
+	--should be inter-operable - and not platform dependent. -> request and response should be in platform independent language e.g. JSON, XML
+	--should allow communication over network
+--Service Definition (SD) - is the the contract b/w service provider(server) and server consumer(client).
+	--SD defines request/response format, request structure, response structure and endpoint.
+--Transport for WS could be HTTP or MQ
+	--client would place the request in the queue. server'd be listening on the queue, would take the request, process it, create a response and place it in the queue.
+	  and the client would take the response from the queue. e.g. WebSphere MQ
+--SOAP -> it has a specific XML structure. the XML structure consist of three parts  SOAP-ENV: Envelop -> (SOAP-ENV: Header and SOAP-ENV: Body)
+	--SOAP-ENV: Header -> contains meta-information like authentication, authorization, signature
+	--SOAP-ENV: Body --> contains content of the request and response
+	--in soap SD is called WSDL -> web service definition language which defines endpoints, all operations request structure and response structure.
+	--SOAP is all about adhering to its XML structure.
+--REST REpresentation State Transfer HTTP Methods(GET, POST, PUT, DELETE..) HTTP Status Codes(200. 201..)
+	--Data Exchange format - No restriction, JSON is popular
+	--Transport -- always HTTP, rest is build on HTTP
+	--SD --> there is no standard SD however WADL and swagger is popular one
+--To see auto-configure report i.e. what all are auto configured in the application
+	--start the application in debug mode -> logging.level.org.springframework = debug
+	--report shows DispatcherServletAutoConfiguration matched: this is coz, the app found DispatcherServlet class on the class path.
+	--SB autoConfigure -> configures every jars and class that it founds on the classpath. SB autoConfiguration configures dispatcher servlet, http message converter,
+	  jackson bean, error mapping etc.
+--To change root context path: server.contextPath=/rootpath or server.servlet.context-path=/rootpath (in SB 2.0 +  versions)
+--To return the created resource(from PostMapping("/users") return /user/{id})
+	--URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId().toUri();
+	--return ResponseEntity.created(location).build();
+--To handle exception
+	--Create a custom class and extend ResponseEntityExceptionHandler. Mark the class with @ControllerAdvice(to make this class available for all controllers)
+      and @RestController(as it returns reponse).
+	--create a method @ExceptionHandler(Exception or CustomException.class) public final ResponseEntity<Object> nameOfUrChoice(Exception or CustomException ex, WebRequest r)
+	--CustomExceptionResponse ce = new CustomExceptionResponse(ex.getMessage); this constructor takes any number of args depending on CustomExceptionResponse impl.
+	--return new ResponseEntity(ce, HttpSttaus.STATUS_AS_APPROPRIATE)
+--To validate request -> add @Valid along with @RequestBody. use javax.constraints annotations on ur pojo/entity fields to add constraints and default error message.
+--To implement HATEOAS -> it used to return actions or links of the resources along with the response data.
+	-- return EntityModel<User> from the API. e.g. User user = service.findOne(id); EntityModel<User> model = EntityModel.of(user);
+	-- create link with WebMvcLinkBuilder linkToUser = linkTo(methodOn(this.getClass()).methodNameWhoseEndPointToBeRetured());
+	--model.add(linkToUser.withRel("all-users")); return model;
+--To implement internationalization (i18n) -> pass the language from client into the header e.g. "Accept-Language = fr";
+	--on resource in controller accept '@RequestHeader(name = "Accept-Language", required=false) Locale locale' as method argument
+	--To read data(key-value) from messages.properties file -> make use of MessageSourse interface from springframework. it automatically configures messages.properties
+      file`
+	--@Autowire MessageSource in the component. return messageSource.getMessage("key-from-file", null, "default message", locale);
+	--We can also use LocaleContextHolder.getLocale() instead of @RequestHeader(...)
+	--create diff properties files like messages-fr or messages-en, depending on the locale i.e. Accept-Language value msg will be read from the respective file.
+--To implement content negotiation
+	--1st approach: - include jackson-dataformat-xml. In Request Header 'Accept = "application/xml"'
+	--2nd aaproach: - implement WebMvcConfigurer interface and override configureContentNegotiation(ContentNegotiationCongigurer configure)
+	--mark entity class with @XmlRootElement. and in request url appemd .xml e.g. user/10.xml
+--To integrate springdoc openapi-ui Documentation (Swagger): -springdoc-openapi library helps automating the generation of API documentation using spring boot projects. 
+	it works by examining an application at runtime to infer API semantics based on spring configuration, class structure and various annotations
+	-- add org.springdoc-springdoc-openapi-ui dependency (thats all). To access ui: localhost:8080/swagger-ui.html
+	--Once you add the dependency JSON is created at /v3/api-docs with all the documentation around the API which is reffered as open API documentation.
+		and the tool used to view UI is called swagger UI.
+	--when swagger was created in 2011, it was called swagger definition which is renamed to openAPI definition in 2016.
+	--documentation conatins 4 paths: info, servers, paths(define resource details), components(has schema defined).
+--Monitoring with Actuator: - helps you manage and monitor your application. Can be accessed at http://localhost:8080/actuator
+	--Add spring-boot-starter-actuator dependency. add - management.endpoints.web.exposure.include=*(to enable everything) in the property file.
+	--/actuator/beans  -> to see all the beans that are created in the application. other endpoints are /actuator/env, /heapdump, /threaddump, /metrics. /mapping
+--HAL Explorer/browser -> provides visual representation(UI) for all the actuator links. helps you explore rest endpoints in easy way.
+	--add spring-data-rest-hal-explorer dependency.
+--Static filtering for restful response: - suppose there are 3 fields in ur response bean and you only want to send 2 fields to the end consumer.
+	--one way is @JsonIgnore on the 3rd field in the bean or @jsonIgnoreProperties(value={"field1", "field2"}) at class level.
+--Dynamic filtering -> add @JsonFilter("someName") on Bean class. use SimpleBeanPropertyFilter.filterOutAllExcept("field1") and FilterProvider.
+	-- create MappingJacksonValue(user){{setFilters}} are return from the controller. see lecture - 39
+--versioning the APIs -> suppose in v1, we returned name field and in v2 returned firstName and lastName. Older consumers expects old response
+	--one way is create different uri e.g. "/v1/person" and "/v2/person"
+	--other way is by using params e.g. @GetMapping(value="/person/param", params="version=1") and access as /person/param?version=1
+	--using headers e.g. @GetMapping(value="/person/header", headers="X-API-VERSION=1"). pass X-API-VERSION value in request header.
+	--using produces e.g. @GetMapping(value="/person/produces", produces="application/vnd.company.app-v1_json"). pass as headers Accept = vnd.company.app-v1_json
+--In Basic authentication we send username and password as part of request. Other is Digest authentication
+--@ApiModel(description="All details about the user") at class level @ApiModelProperty(notes="Name should be atleast 2 characters") at field level
+--spring.h2.console.enabled=true -> for using H2 DB console. create data.sql file in resource folder for sql query
+--To Load or execute something on application start up
+	--implement CommandLineRunner and override run(). 
+	--create a Configuration class and create bean for CommandLineRunner
+	@Bean
+    CommandLineRunner command(){
+        return args -> {
+            System.out.println("Hello from command line runner separate");
+        };
+-------------------------------Microservices-v1 (MS)---------------------------------------------------
+--use SpringCloudConfigServer(SCCS) to centralize all the configurations for all the micro-services. SCCS reads the data from centralized git repository.
+	--to read properties from .properties file. --- one way is use @Value(${"key-name"}) at field level;
+	--use @ConfigurationProperties(prefix = "spring.custom") at class level. create a class with field name matching the keys in property file and add this annotation.
+	  Autowire this class wherever you want to access the property. use getter method to read the properties.
+	--If properties are defined in file other than application.properties the use @PropertySource(value = "folderName/filename.properties");
+	--create SpringCloudConfigServer - create SpringCloudConfigServer SB app by including config Server dependency
+	--create git repository and add the property file which holds all the required properties. If ur MS name is limit-service then name the file as 
+		limit-service.properties
+	--in SCCS app's properties file add location of git repo. e.g. spring.cloud.config.server.git.uri = "git-url/filename.properties"
+	--add @EnableConfigServer on SCCS app above @SpringBootApplication to enable cloud config server
+	--To access this properties -> localhost:PORT/limit-service(filename)/default
+	--To store properties of diff evn(QA, DEV) for an application --> limit-service.properties is default file. for other env file name the file like.
+	  limit-service-qa.properties, limit-service-dev.properties etc. To access - localhost:PORT/limit-service(filename)/dev
+--To Connect MS to SCCS and read properties 
+	--rename MS's application.properties to bootstrap.properties. add application name i.e. spring.application.name=limit-service
+	--Add url for SCCS i.e. spring.cloud.config.uri=http://localhost:PORT
+	--application name and property file in SCCS must exactly match. By default it picjs up default file.
+	--If you are using SB 2.4.0 and above, need to add dependency 'spring-cloud-starter-bootstrap'
+--To Configure profile for MS limit-service: - spring.profiles.active=dev in bootstrap.properties 
+	
