@@ -1,0 +1,37 @@
+---------------------------Stream io----------------------------------------
+--Byte stream for reading/writing binary data i.e. image, audio, video, (not text data) etc
+--character stream for reading/writing character data.
+--InputStream: Base abstract class for all byte input streams. Reads data in a group of 8-bit(1 byte at a time) 
+  abstract int read() throws IOException
+	--Reads 1 byte & returns as int b/w 0 & 255(2^8-1). e.g. for 'a'->97 is returned.
+	--Returns -1 if end of stream is detected. Throws IOException
+  int read(byte[] b, int offset, int length) throws IOException. (This is concrede method)
+	--this method is used to read groups of bytes
+---All read methods are blocking i.e. it blocks the flow if data is not available.
+--OutputStream: Base abstract class for all byte output streams.Writes data in a group of 8-bit(1 byte at a time)
+  abstract void write() throws IOException
+--FileInputStream and FileOutputStream extends InputStream and OutputStream respectively.
+--reading/writing 1 byte at a time from disk is very inefficient. To overcome this we use buffering. 
+--i.e. Read/Write block of bytes into memory buffer. Then read from m/y buffer which is much faster than reading from disk. Similarly write block of bytes into a m/y buffer and at once flush all the data into disk in a single I/O operation. This way we are not hitting the disk for each byte we want to write.
+--For buffering, specialized classes BufferedInputStream & BufferedOutputStream sub class of FilterInputStream and FilterOutputStream respectively is available.
+--Buffer is Simply ~ byte array. Default buffer size ~ 8192 bytes. It can be changed by invoking constructor.
+--BufferedInputStream&BufferedOutputStream does not work independently. They work with other streams like FileInputStream and FileOutputStream. BufferedStream only provide buffering as their core functionality and do not take responsibility of directly dealing with the files on the disk.
+--e.g. BufferedInputStream in = new BufferedInputStream(new FileInputStream(file.jpg)); This way two class are chained. In BufferedInputStream constructor, it has to be any sub class of the InputStream as it is abstract class and can not be instantiated. Likewise for BufferedOutputStream.
+--This is decorator pattern BufferedInputStream is called decorator as it is decorating the FileInputStream object with additional buffer functionality. Decorator is also referred  as wrapper class.
+----------------------------Character Streams--------------------------------------
+--Read/write characters. Built on top of byte stream as in the end everything is binary.
+--Reader and Writer class serves s base class for characters oriented streams.
+--Reader: Base abstract class for all character input streams. Reads 16-bit char data in UTF-16 format.
+  int read() throws IOException
+  --Read 1 character & returns as int b/w 0 & 2^16-1(65535). and -1 for end of the stream
+    abstract int read(char[] cbuf, int offset, int length)
+--Writer: base abstract class for all character output streams. Writes 16-bit char data to a sink(source)
+--To know the encoding method used: System.getProperty("file.encoding") or Charset.defaultCharset().
+
+  
+
+
+
+
+
+

@@ -1,0 +1,321 @@
+--you need to import your script such that it runs only after all the HTML content is parsed. This can be achieved by putting <script> tag in the body at the end. Or putting it into Head tag with defer keyword.
+e.g. <script src ='.js' defer/> defer here means download it early but run only after you are done parsing.
+--let and const introduced in ES6 and are block scoped
+--let is block scoped, with let you can not redeclare a variable in same scope. with var you can
+--variable name declared global scope and same name is declared in function scope then it's call variable shadowing
+--variable declaration is hoisted in JS. let & const forces u to define the the variable b4 getting used.
+-- 'use strict' forces us to write cleaner code
+--primitive values:-string, numbers, booleans, null, undefined, symbol, they r typically stored in stack.
+	--primitive values are copied by values i.e. let name ='Raj' and let newName=name. actual value is copied
+--reference type:- Object is referenced type and are stored in heap. Array is of type Object.
+	--when copying object, only reference(address) get copied and not the values.
+--Array or Object gets created in m/y and its address is stored in variable. If data is manipulated without address getting changed, const type variable wont throw error. const arr =['Raj'] and arr.push['Raj', 'R']
+--functions are constructs that allow us to have "code on demand". they can be called from multiple times.
+--functions are special type of object with preconfigured properties. e.g. console.log(function).
+-- you can store function in a variable.
+	const start = function startGame(){console.log()}. This is expression, it yields some value which could be store in a variable. Here JS will not store this function in global scope instead stores in variable.
+	Hoisted to top but not initialized, can't be declared anywhere in the (i.e. not after it's used).
+--function startGame(){console.log()}. This is declaration. Here JS stores function in global scope. Hoisted to 	top, can be declared anywhere in the file (i.e. also after it's used).
+--prompt() is used to capture user input in JS. It's inbuilt function. return value of prompt is string.
+--falsy:- 0, "", null, undefined, NaN
+--'undefined' is the default value that JS assigns to uninitialized variable or property.
+--truthy:- any number, any non empty string, all objects and arrays.
+--JS is quite forgiving language. A method with any number of args can be called with any number of args. undefined (only falsy value) args is replaced with default args if default is declared.
+--function.bind(this, any number of agrs). bind() allows us to pre-configure functions in places where we need to pass args but dont execute there immediately. it prepares the function for future use.
+--call(this,,,,) and apply(this, []) also allows us to pre-configure functions but they execute them immediately. call() allows additional comma separated parameters whereas apply() allows params in array.
+--Rest operator (...value) it bundles all the agrs into an array.
+--1+'1' = '11' or 1 + 'hello' = '1hello', this is due to type coersion. + is special operator which is used for adding 2 numbers as well as adding strings. With + sign JS converts non-string valus to string. 
+--1+ true = 2, coz for boolean there only two possible values 1 or 0
+--1 * '2' =2 or 1 / '2' = 0.5 coz *, - and / only works with number hence JS converts non number value to num.
+--explicit conversions, Number('20')=20, String(20)='20' or parseInt() and parseFloat
+------------------------------DOM-----------------------------------------------------------------
+--document is root node of DOM. window is top most global object(has access to currently loaded tab only)
+--HTML tags are converted to element node and white space and texts are converted to text node in browser.
+--querySelector('.cssClass or #cssId' or 'HTMLtag')->diff ways of quering elements(by CSS selector), returns 1st found element. returns only 1 el(selectors are used just as css selector).
+--querySelector(ul li:first-of-type or li:last-of-type). supports complex query
+--getElementById()->to query element by specific Id. always returns only one element
+--DOM nodes are just JS objects in the end. i.e. reference values. These methods returns object references(add).
+--querySelectorAll() returns array-like object. NodeList. static node, 
+--getElementByTagName()- returns all elements for give tag name. CollectionItem - live node
+--live node means - previously queried elementsList gets updated on dynamically adding new element.
+--NODES -> The objects that makes up the DOM. attributes are converted to attribute node.
+<div> 		--> is parent of <p> but not of <em>. is an ancestor of both <p> and <em>.
+  <p>		--> is a child of <div>. <em> is not!
+	<em>	--> both <p> and <em> is descendant of <div>
+--diff methods available for DOM traversal 
+	parentNode, parentElement, closest(), childNodes, children, firstChild, firstElementChild, lastChild, lastElementChild, previousSibling, previousElementSibling, nextSibling, nextElementSibling.
+--childNodes returns all the nodes i.e. element node as well as text node.
+--children returns only child element nodes.
+-- by default HTML omits white space(pre and post spaces of an html tag, (these spaces forms text node)) that has no purpose. To see these spaces on rendered page add special scc i.e. white-space: pre
+--Creating and Inserting elements
+	--HTML string - innerHTML/insertAdjacentHTML - Add(render) HTML string/in specific position
+	--createElement() - appendChild()/append - append new DOM element/node.
+		--prepend(), before(), after(), insertBefore() - insert new DOM element/node in specific postion.
+		--replaceChild(), replaceWith(), insertAdjacentElement-- replace existing DOM element/node with new one.
+--innerHTML adds html tags and text and re render entire elements which impacts performance. 
+  eg. ul.innerHTML = ul.innerHTML + '<li> something </li>'
+--textContent only adds text node. eg - li.textContent = 'new text';
+--div.insertAdjacentHTML('beforeend', '<p> something </p>) this doesn't re-render all element.
+--const ulEl = document.createElement('ul');
+--const newLi = document.createElement('li') and ulEl.appendChild(newLi) or ulEl.append(newLi);
+--with append()- u can append multiple nodes and as well as test content. prepend adds to 1st element.
+--SelectedEl.classList.toggle('className')- it checks and adds css class if not present or removes if present.
+--cloneNode(true) to copy a node multiple time.
+--removing Element. - query for the Element and list.remove() - IE doesn't supports
+--list.parentElement.removeChild(list);  reach out to parent element of list and then remove child.
+--classList is alternate way of adding and removing element's className
+--e.g const div = document.createElement('div'); div.className = 'foo'; console.log(div.outerHTML);
+	div.classList.remove("foo"); div.classList.add("anotherclass"); 
+--------------------------------Iterables and Arrays------------------------------------------------------------
+--iterable - Objects where you can use for of loop. Not every iterable ia an array! e.g. other iterables are NodeList, String, Map, Set.
+--Array-like Object -> Objects that have a length property and use indexes to access items. Not every Array-like object is an array! eg. NodeList and String
+--ways to create array
+	--const arr = [1,2,3] - most common ways; it can be of mixed type = [1,2,'hi',{}]
+	--const arr = new Array(5) creates an empty array of size 5. whereas new Array(5,3) creates array with 2 val
+	--Array.of(1,2)-creates array with these 2 values.
+	--Array.from('HI!')==['H','I','!']. is used to convert array-like object and iterable to real array.
+	--unshift() adds in the beginning of the array. unshift()n push() returns length of the array.
+	--shift() removes from beginning of the aaray. shift() n pop() returns removed value.
+	--arr.splice(2,0,'something', 'some'). start from 2 index, delete 0 element and add given values in array
+		--useful for adding new value at given index.
+	--arr.splice(2,3)->from index 2 onward delete 3 elements from array. arr.splice(0) will empty the array.
+	--arr.splice(-1 or -2, 1)-> starts from right side of the array. splice() returns removed value.
+	--arr.slice() creates a new copy of array from existing array.
+	--arr.slice(2,5)->used to select a range of elements from array. includes 1st index but not 2nd index.
+	--arr.concat([1,2,3])-used for combining two or more arrays n returns brand new array with combined values.
+	--arr.lastIndexOf() --starts from right
+	--arr.find((p, index, person)=>{p.name=='abc'}) returns matching object. also arr.findIndex()
+	--arr.includes(); for primitive values
+	--arr.forEach((p, idx, Array)=> {cons obj = {index:idx, price:p*2}}) - it takes upto 3 parameters. gives access to index as well. advantage ovr for of loop (for(const arr of array)). no return value
+	--arr.map((p, idx, Array)=>{return p*2}) returns new array with transformed data.
+	--arr.sort()-> by default, converts everything to string and sort. arr.reverse()
+	--arr.sort((a,b)=>{if(a>b) return 1 else if(a===b) return 0 else return -1})
+	--arr.filter(p=>p>5) returns filtered array gt 5. creates a brand new array with filtered values.
+	--arr.reduce((a,b)=>{returns a+b}, 0) returns combined value of an array.
+	--string.split('delim')-returns array of string.
+	--arr.join('') -> returns a new string out of array.
+	--newArr = [...arr] ->spread operator pulls out all the elements from given arr and creates a new array.
+	it copies only one level of elements i.e. if you have nested arrays or array of objects, means u ve array of addresses of those objects stored in m/y. spread operator copies only these addresses and not actual object hence any change in the property of these object wud be reflected in the copied array.
+	--Array destructuring is very powerful syntax for spliting array into variables
+	e.g. const arr = ['rajesh', 'kumar']; const [fname, lname]=arr; instead of- const fname = arr[0]
+	also const arr = ['rajesh', 'kumar', 'abc', 'xyz'] to const [fname, lname, ...others] = arr;
+	destructuring starts from left to right i.e. 1st el of array is assigned to 1st variable and so on.
+	const copied = [...Arrays.map(p=>({name:p.name, age:p.age}))] to return {obj} is single line with => enclose it in a pair of parenthesis. 
+	Arrays store(nested) data of any kind and length. Order is guaranteed, duplicates r allowed, index-based access.
+-------------------------------------Map and Set---------------------------------------------------------
+--Set store(nested) data of any kind and length.Order is not guaranteed, duplicates are not allowed, no 	index-based access (quite similar to java map and set).
+	--const ids = new Set('hi', 'hello', 1); has methods ids.has('hi'),.add(),.value(),.delete(),.entries() etc 
+--Map stores key-value data of any kind and length, any key and value is allowed. Order is guaranteed, duplicate keys are not allowed and key-based access. 
+	--const map = new Map(key, value) methods->set(),get(),entries(),keys(),values(),has(),size(),delete()
+	for(const[key, value] of map.entries()) or for(const key of map.keys()) or for(const val of map.value())
+	--map can use any values and types as keys and Object only may use strings, numbers, symbols as keys
+-------------------------------------Objects--------------------------------------------------------------
+--Object is core data structure in JS made up of properties and methods. Stores date in properties and actions in methods. It allows us to group related data together and split ur code into logical pieces.
+	--adding, deleting and modifying properties. 
+		const person = {name: 'rajesh', hobbies: ['a','b'], greet: function(){console.log('hello')}};
+		alternate-> greet(){console.log('hello')}, arrow => function gives no benefit inside of Object's method.
+		person.age=30; to add a propety in object on the fly,
+		delete person.name; to delete a property on the fly.
+	--'first name': 'Rajesh' - Obj property name can be with space in b/w but has to be string in ' ' or " ".
+	--To access such property syntax is person['first name'] or li.style['background-color']
+	--1.5: 'Rajesh'-> +number is valid obj prop name. to access this person[1.5];
+	--with person[] notation, one can dynamically access and add properties to obj. {[var]:'any value'} obj prop
+	--e.g.const propKey = 'field 12'; const person = {[propKey]: 'Max'}; console.log(person['field 12']);
+	--You must not have a semi-colon inside of the object definition (properties).
+	--Obj spread Operator const person1={...person}-> it creates a new copy of person object but not deep copy.
+	  person2={...person, age:35, hobbies:[...person.hobbies]} -> age pulled in ...person will be overwritten by age:35 and pulled hobbies will be overwritten by new cloned array. this is deep copy.
+	--Object.assign({}, person) -> copies from src Obj 'person' and merge in target obj '{empty or non-empty}'.
+	--Obj destructuring const {name,age, ...remainingProps} = person; (key name should match key in object)
+	--const {name: fname}=person -> syntax to rename pulled prop name to fname.
+	--checking prop existence: if('name' in person)->'in' operator or if(person.name===undefined)
+	--'this' inside a function always refers to what called that function. (refer lecture 234)
+	--on EventListners -> browsers binds 'this' for you to the DOM element that triggers the event.
+	--getter and setter const person = { set name(val){this._name=val;}, get name(){return this._name}}
+	--set and get are special key word. Although name() looks like method we can access like property.
+	--person.name="rajesh" set is triggered and person.name get is triggered. if no setter, readonly props
+-----------------------------------OOP-------------------------------------------------------------------------
+--class -> Blueprint for object, Define how objects look like, which properties and methods they have.
+--onject -> instances of classes. The things you work with in code.
+--In class you assign value with equal to(=) sign and end the line with semi-colon.
+	-- class Product {title='default is undefined'; price; description; constructor(title, price, desc){}}
+	or->class Product {constructor(title, price, desc){this.title=title; this.price=price; this.desc=desc;}}
+	--to initialize const p = new Product('a', 10, 'description');
+--in object literals value is assigned with colon(:) and line ends with comma. const obj = {name:'raj', age:30}
+--const p = new Person(); 'typeof p' returns object. 'p instanceof Person' returns true;
+--Object.getOwnPropertyDescriptors(p).
+--Object.defineProperty(p, 'field or func', {configurable: true, enumerable:true, value: '', writable:true})
+-----------------------------------constructor function and prototype------------------------------------------
+--constructor function.
+	--function Person(){this.name='raj'; this.greet=function(){console.log('this.name')}}
+	--const p = new Person(); p.greet();
+	--const p = Person(); p.greet() returns error because without new keyword we execute the Person function but it doesn't return anything(undefined). Hence calling greet on undefined retunrs error.  
+	--new keyword internally creates and empty obj 'this'and then adds all the properties and then returns this.
+	function Person(){this={};this.name='raj'; this.greet=function(){console.log('this.name');}; return this;}
+	--class in JS is syntactic sugar over constructor function. It also helps us to create blueprint
+	--Person.prototype.greet = function(){console.log(this.name);}; this func will be available to all instance
+	--Prototypes are basically "fallback objects" to which other objects can be linked
+	-- the idea behind "Prototypical Inheritance" is to share the functionalities amongst the objects.
+	--In class based func. if method() created with short hand syntax, then the method is created on prototype object and shared on all the instances hence takes less m/y. (to call on addEventListener('click', p.greet.bind(p))); however with => we need not bind the function.
+	--if method = function {} or ()=>{} created this way, then creates the method on every instance.
+	--Object.getPrototypeOf(object i.e. person) --to get the prototype of an object.
+	--Object.setPrototypeOf(object i.e. person, {getAge: function(){console.log('');}}); to add a function or property on prototype of object. specially literal based object coz is base obj is Object.prototype.
+	--const stu = Object.create({printProgress: function(){console.log('');}})-this also creates empty object and sets printProgress() on prototype. to set propes on stu ==> stu.name='raj';
+------------------------------------Advance DOM Interactions----------------------------------------------------
+--to add element via JS selectedEL.dataset.extraInfo='any data goes here'
+--on html data-*; data-extra-info----> to access it selectedEL.extraInfo.
+--Element Box dimensions
+	--select the EL, in browser console $0.getBoundingClientRect()
+--adding script dynamically.
+	--const ds=document.createElement('script'); ds.scr='../file.js'; ds.defer=true; document.head.append(ds);
+	--const timerId = setTimeout(function, timeInMiliSec, optional([arr of arg for func])) returns id.
+	--const intervalId = setInterval(function, timeInMiliSec, optional([arr of arg for func]));
+	--clearTimeout(timerId); clearInterval(intervalId); these 2can be used interchangeably.
+--location is an global object on window. which has various useful methods.
+	--.href='', .assign='', .replace=''(with this u can't navigate back), host, hostname, origin, pathname etc.
+	--history.back(), .forward, .length, .go(5); 
+	--navigator.geolocation.getCurrentPosition((data)=>console.log(data)); 
+	--navigator allows browser to interact with machine.
+	--const date = new Date() or new Date('07/11/2020'). is inbult constructor fucntions which has many methods.
+	--const error = new Error('error message goes here'). is inbult constructor fucntions. This can be used with throw keyword to throw custom message. eg. throw new Error('something went wrong');
+----------------------------------working with Events---------------------------------------------------------
+--Events enable us to run some code upon certain Events. It typically transports data.
+	--Event is inbult constructor fucntions which is base of all event object.
+	--Event is inbult constructor fucntions which is base of all event object.
+	--button = document.getElementById('abc'); --button.onClick = function; not best practice to add event.
+	--button.addEventListener('click', buttonhandler); button.removeEventListener('click', function);
+	--these events automatically add an argument to the registered function which helps us to interact with it.
+	--const buttonhandler = e=>{e.target.disable=true;};
+	--also--> mouseenter(mouse hover), scroll, mouseleave
+	--default behavour of form with button of type submit is to send the data to the server.
+	--form has 'submit' event. event.preventDefault() this not automatically submit form data to server.
+	--events in JS has 2 phase, capturing(goes from outside to inside) and bubbling(inside to outside).
+	--by default all eventListeners are registered in bubbling phase. i.e. propogates upward.
+	--to switch phase from bubbling to capturing add 3rd param. div.addEventListener('click', ()=>{}, true);
+	--with 3rd param, outer event will occur 1st then the inner event.
+	--to prevent bubble(propogation) use event.stopPropogation(); click event bubbles. mouseenter, drag doesnot
+--drag & drop implementation.
+	--Mark Element as draggable->listen to dragstart event->accept drop via dragenter and dragover -> listen to dragleave event->listen to drop event & and update data/UI
+-----------------------------------Advance function concepts----------------------------------------------
+--Pure function -> is a function which for some given input always produces same output and does not have any side effect, which means it does not change anything outside of the function.
+--In JS primitives(String or number)is pass by value and objects and arrays follows pass by reference.
+--Pass by Value: The method parameter values are copied to another variable and then the copied object is passed, that’s why it’s called pass by value	eg-java is always passed by value.
+--Pass by Reference: reference/address of the object is passed as argument of the method.
+--Factory functions: --> A function that produces another function.
+function createTaxCalculator(tax){ function calculateTax(amount){ return tax * amount;} return calculateTax;}
+const calculateVatAmount = createTaxCalculator(0.19);
+--func createTaxCalculator returns a pointer to inner func calculateTax with preconfigured value of tax. 
+--console.log(calculateVatAmount(100)); = 19; By calling calculateVatAmount, we call calculateTax func.
+--Closures:-(lecture:328)- thumb rule->every function in JS is a closure.
+--Every function closes over the surrounding environment which means it registers the surrounding
+environment and the variables registered there and it memorizes the values of these variables.
+-- IIFE stands for "Immediately Invoked Function Expression
+--recursion: a function which calls it self and always uses the returned value of internal function.
+--e.g. function powerOf(x,n){ returns n===1?x:x*powerOf(x,n-1)} console.log(powerOf(2,3));
+----------------------------------Number and String-------------------------------------------------------
+--In JS every number is a Float. unlike other Programming languages, JS doesn't know special Integer type.
+	--e.g. 5, -3, 12 would actually be stored like 5.0, -3.0, 12.0
+	--Numbers are stored as 64 Bit Floating points in JS. Number.MAX_SAFE_INTEGER OR Number.MIN_SAFE_INTEGER.
+	--(1/5) 0R (5).toString(2(means base of 2)) gives binary representation of the decimal number.
+	--(0.2+0.4).toFixed(2 i.e number of digits after decimal)
+	--BigInt is used to represent very large number i.e. > Number.MAX_SAFE_INTEGER.
+	--BigInt is not 64 Bit floating points, but internally it handled as string. JS does all the heavy lifting of converting it around when doing calculation. It is represented with letter 'n' at the end e.g. 12379908n.
+	--you can not mix BigInt with number i.e. 100n - 20. to do this parseInt(100n)-20 or 100n-BigInt(20).
+	--Math.random()->produces number between 0 and 1.
+	--function randomIntBetween(min, max) //min 5, max 10
+	  { return Math.floor(Math.random()* (max-min+1)+min); } //10.99999 = 10 Math.floor trims the decimals
+	--regex.text('string'); regex.exec('string'); 'string'.match(regex)
+------------------------------Asynchronous:-Promises & Callbacks----------------------------------------------
+--callback is a function that get passed into the parameter of ur function and it runs when ur first function finishes.
+--Server side routing means on each route data is exchanged where as client side routing is just parsing the URL and re-rendering the page
+--JS is non-blocking and single threaded means it offloads a longer taking tasks (e.g. timers) to the browser (or nodejs env) which uses multiple threads. The browser or node env communicates with JS via the Event Loop and the Message Queue to let it know once a longer-taking task finished. Once the task is finished, the browser moves the tasks into message Queue and from there event loop moves it on the JS stack when it's empty.
+--Promises are objects which wrap asynchronous code to make working with it easier.
+--Promise is a constructor function built into JS. Promise itself always takes a function as argument that gets executed right after the promise is created. The passed function takes 2 arguments (resolve, reject) which is also a function. 
+--const getPosition = opts => { const promise = new Promise((res, rej)=>{
+	navigator.geolocation.getCurrentPosition(success=>{
+	res(success);}, error => {rej(error)}, opts);}); 
+	return promise;};
+	--success and error are two call back functions passed as arguments of getCurrentPosition. 
+	--into resolve function we pass success CB and into reject we pass error CB. success and error objects are data fetched by getCurrentPosition and they are passed into promise so that we can listen these data wherever we call this promise with then() keywordrd. 
+	--resolve marks the Promise as complete and reject marks as failed.
+-- to call above promise -> getPosition().then(data=>{
+	const storeData = data; return anotherProme or anything;}, err=> console.log(log););
+	--then takes a CB function which is invoked when resolve is executed. 1st is success case and 2nd is failure
+	getPosition().then(data=>{
+	const storeData = data; return anotherProme or anything;})
+	.catch(err=> {console.log(log)});
+	.then(data=>{console.log(data);});
+	--position of the catch block does matters. If you want to cancel the entire promise chain, the catch has to placed in the end after all the then block. This ensures that if one of the then block rejects, all the others are skipped and flow goes to catch block. If you add catch in the middle somewhere then, prior ones are skipped if one of them rejects but then blocks after the catch block will be executed you can have multiple catch block in the chain.
+--------------------------Async and await------------------------------------------
+async/await in the end just are a code trasformation witch still uses promises behind the scene.
+--async is works only with functions. async keyword is added infront of the function. By adding async, JS wraps the function in a Promise behind the scene and retuns the promise object.
+--await is added infront of a promise and it waits for the promise to resolve or fail. It returns the resolved data which could be stored in a varaible. Internally, it replicates the then block call made on promise.
+--on async await we can handle error with try and catch block.
+async function somename() {
+	let a; let b; try {a = await getPosition(); b = await setTimer(); } 
+	catch(error) {console.log(error);} } 
+--if 1st await call in try block fails, rest other is skipped and flow goes to catch block.
+--Promise.race([getPosition(), setTime(1000)]).then(data=>{console.log(data)});
+--race() takes array of promises and returns the data for the promise that resolves first. all other promises are just ignored not cancelled. 
+--Promise.all([getPosition(), setTime(1000)]).then(combinedData=>{console.log(combinedData)});
+--all() retunrs array of results of all the promises. retuns only when all the promise is resolved. It cancels all even if one of them fails.
+--Promise.allSettled([getPosition(), setTime(1000)]).then(combinedData=>{console.log(combinedData)});
+--it doesnot cancel the promise on any failure, it retuns detailed result of all the promises together.
+--------------------------Network or http request-------------------------------------
+--JSON.parse()-> converts JSON to JS object/data || JSON.stringify->converts JS object/data to JSON
+--async function postData(url = '', data = {}) {
+	const response = await fetch(url, {
+		method: 'POST', // *GET, POST, PUT, DELETE, etc.
+		headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+	return response.json(); }
+--axios.get('/user?ID=12345').then(function (response) { console.log(response);}).catch(function (error) {
+    console.log(error); })
+--FormData is a data format that allows us to combine text value and blob
+--modern browser have security mechanism where they don't execute the script tag which are output with the help of innerHtml; innerHtml should be replaced with textContent or use sanitizeHTML library
+------------------------------Module in JS-----------------------------------------------
+--Js modules are file scoped and not global scoped. 
+--JS module is better tha using multiple <script src...> imports because each file specifies its dependencies, you dont need to manuaaly micro-manage the correct order.
+--export const name ='Rajesh'; export function greet(){...}
+--import * as data from './file.js; or import {greet, name } from './file.js'".}
+--non-exported code in a module executes only once, upon the first import into another file.
+--export default class {.....} is imported as: import nameOfUrChoice from './file.js'; default import is not wrapped in curly braces. If a file has both i.e. default and named export the import as:
+--import nameOfUrChoice, {namedExport} from './file.js';
+--dynamic import: import the module where it is required. It will dl the module only when required.
+--import('./pathToFile/file.js').then(module => {   //this is special function built in browser.
+	const abd = module.ImportedClass() //write the code that is required here.
+	})
+--webpack is module bundler. It is used to bundle our code. 
+--import * as _ from 'lodash' when file name doesnot start with ../ or ./ or /, then webpack would look for this package in node_modules folder.
+--import * as _ from 'lodash/array' means only array from lodash is imported. which reduces the bundle size.
+-----------------------------------browser storage--------------------------------------------------
+--session storage data lives as long as your page in open in the browser. it is cleared when u close the tab or browser.
+--local storage is never cleared unless the user clears it manually or the browser clears it because it's running out of space or anything like that.
+--sessionStorage.setItem('key', value); sessionStorage.getItem('key');
+--localStorage.setItem('user', JSON.stringify({name:rajesh, ager:30})); JSON.parse(localStorage.getItem('user'))
+--document.cookie=`key=${value}; max-age=10`; (max-age unit is in second)
+--const user = {name:rajesh, age:30}; document.cookie=`user=${JSON.stringify(user)}`;
+--const cookieData = document.cookie   --> returns all the cookies present
+--IndexedDB is used to store more complex data in the browser.
+------------------------------------Browser support----------------------------------------------------------
+--clipboard functionality (feature detection and fallback code)
+	const button = document.querySelector('button'); const textParagraph = document.querySelector('p');
+	button.addEventListener('click', ()=> { const text = textParagraph.textContent;
+	if(navigator.clipboard){ // feature detection i.e. if clipboard feature available in browser then works
+		navigator.clipboard.writeText(text).then(result => {console.log(result);});}
+		else{ //fallback code for browser where clipboard feature is not available
+			alert(feature not available in the browser or some other logic);}});
+--polyfills -> is third party JS library which adds unsupported features to the browser
+	--ployfills, behind the scene work around the feature, with feature that browser does support. eg. to support fetch() API, polyfills works with XHR api behind the scene.
+--when u can't use feature detection and polyfills then we need to transpile the code. 
+	--for core language feature like const, let or => function.
+	--convert(transpile) modern code to older code. Tool like Babel is used to transpile the code.
+	--to configure babel,refer official docs
+	--encodeURI(stringData): is a built in function that converts string into url friendly data.
+------------------symbols, Iterators, generators,Reflect API & Proxy API--------------------------------------
+--Symbols: are yet another prmitive values. There are built in Symbols or u can create ur own. Symbols are unique i.e. the guarantee uniqueness.
+--const uid = Symbol() or const uid = Symbol('uid') //to create Symbol.
+--Generator is a special function in JS which automaticaly generates iterators for you. i.e. object that has next method. you create such generator as : function* anyName() {} 
+--Iterators are objects that has next() method.
+--Reflect API gives us bunch of static method to work with the object at meta-level.
+
+
+	

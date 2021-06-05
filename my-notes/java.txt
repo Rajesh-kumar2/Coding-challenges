@@ -1,0 +1,61 @@
+--class OuterClass --> class NestedClass
+--Nested classes are divided into two categories: static and non-static. Nested classes that are declared static are called static nested classes. Non-static nested classes are called inner classes
+--OuterClass outer = new OuterClass(); OuterClass.InnerClass inner = outer.new InnerClass();
+--A nested class is a member of its enclosing class. Non-static nested classes (inner classes) have access to other members of the enclosing class, even if they are declared private. Static nested classes do not have access to other members of the enclosing class. As a member of the OuterClass, a nested class can be declared private, public, protected, or package private
+--To access OuterClass member syntax --> OuterClass.this.variableName/methodName
+--Static nested classes are accessed using the enclosing class name --> OuterClass.StaticNestedClass nestedObject = new OuterClass.StaticNestedClass();
+--A static nested class interacts with the instance members of its outer class (and other classes) just like any other top-level class. In effect, a static nested class is behaviorally a top-level class that has been nested in another top-level class for packaging convenience.
+--Why Use Nested Classes?
+--It is a way of logically grouping classes that are only used in one place
+--It increases encapsulation  --It can lead to more readable and maintainable code
+--InnerClass variable/method is accessible from subclass of OuterClass --> OuterClass.InnerClass inner = outer/subclass.new InnerClass()
+--Trees provide moderate insertion/deletion (quicker than Arrays and slower than Unordered Linked Lists). 
+-------------------------------Binary tree---------------------------------
+--Trees: Unlike Arrays, Linked Lists, Stack and queues, which are linear data structures, trees are hierarchical data structures
+--Why Trees? 
+--One reason to use trees might be because you want to store information that naturally forms a hierarchy. For example, the file system on a computer.
+--Trees (with some ordering e.g., BST) provide moderate access/search (quicker than Linked List and slower than arrays). 
+--Binary Tree: A tree whose elements have at most 2 children is called a binary tree. Since each element in a binary tree can have only 2 children, we typically name them the left and right child.
+--Full Binary Tree A Binary Tree is a full binary tree if every node has 0 or 2 children. The following are the examples of a full binary tree. We can also say a full binary tree is a binary tree in which all nodes except leaf nodes have two children
+--Complete Binary Tree: A Binary Tree is a Complete Binary Tree if all the levels are completely filled except possibly the last level and the last level has all keys as left as possible (Heap falls in this category)
+--Perfect Binary Tree A Binary tree is a Perfect Binary Tree in which all the internal nodes have two children and all leaf nodes are at the same level. 
+--Binary Search Tree is a node-based binary tree data structure which has the following properties:
+	The left subtree of a node contains only nodes with keys lesser than the node’s key.
+	The right subtree of a node contains only nodes with keys greater than the node’s key.
+	The left and right subtree each must also be a binary search tree.
+--A Heap is a special Tree-based data structure in which the tree is a complete binary tree. Generally, Heaps can be of two types:
+	Max-Heap: In a Max-Heap the key present at the root node must be greatest among the keys present at all of it’s children. The same property must be recursively true for all sub-trees in that Binary Tree.
+	Min-Heap: In a Min-Heap the key present at the root node must be minimum among the keys present at all of it’s children. The same property must be recursively true for all sub-trees in that Binary Tree
+--You can use a TreeMap data structure for Binary search Tree impl. TreeMap is implemented as a red black tree, which is a self-balancing binary search tree.
+
+							Implementations
+				Hash Table	Resizable Array		Balanced Tree	Linked List		Hash Table + Linked List
+Set				HashSet	 						TreeSet	 						LinkedHashSet
+List	 					ArrayList	 						LinkedList	 
+Deque	 					ArrayDeque	 						LinkedList	 
+Map				HashMap	 						TreeMap	 						LinkedHashMap
+-----------------------------Micro-services--------------------------------
+--Traditional way or monolithic --> single code base or may be multiple code bases but what get deployed is a single entity, get deployed on one server, runs as one entity and it scales as one entity. Whereas in microservices --> what get deployed and what happen at run time is very very different. That is the primary difference.
+--Discovery server -> to discover the services to talk to instead of hard-coding the URL in microservices. e.g spring cloud/ Eureka server
+--Eureka, Ribbon, Hysterix Zuul --> these are open source technologies that works well with microservices. spring has built wrappers around these technologies so that you don't have to directly interface with them. You talk spring and spring talks right languages with these technologies.Netflix is source of these technologies.
+--> Create discovery server/start Eureka server --> have these individual microservices be Eureka client. Eureka clients register with Eureka server --> Eureka client does two things 1. tells Eureka server, I am here leme know if anyone needs me. 2. It also talk to the server if it needs something.
+--Steps 1.Start up Eureka Server 2. Have microservices register(publish) using Eureka client 3. Have microservices locate(consume) using Eureka client.
+--To cerate Eureka server. create a new spring boot application with 'Eureka Server' as its dependency. Add @EnableEurekaServer on main class.
+--Note: Eureka server gives jaxB error with Java 11, need to add jaxb dependency separately
+--Add spring-cloud-starter-netflix-eureka-client in you microservice to make it work as eureka client. on start of application, it will be registered as eureka client on eureka server UI. To check this goto localhost/8761 under 'Instances currently registered with Eureka'. Adding @EnableEurekaClient to the Sb app with eureka client dependency is now optional. just adding the eureka client dependency in class-path is sufficient. When eureka server is not running on default port, in order for client to find it add the port and server name in client app.
+--spring.application.name = nameOfYourChoice.
+--To Consume a service from Eureka server: --> Add @LoadBalanced on RestTemplate bean along with @Bean. and replace localhost:port with service name from eureka Server in the url., There is also an instance of DiscoveryClient in class-path, so just Autowire it in your application to get the details. RestTemplate handles load balancing behind the scene for us.
+--Fault tolerance i.e if a service goes down. To make sure a service has not gone down, it make use of heart beats. i.e. Eureka client pings the server on regular basis and send out heart beats saying I am alive. Eureka Server has a functionality by default that a certain service does not ping in certain amount of time, It removes the service from registry. If discovery server goes down, it picks up from the cache. All these are taken care by the framework by default.
+---------------------Fault Torrance and Resilience---------------
+ --Fault Torrance: what tolerance your system has for a fault i.e. something goes down in you app. 
+ --Resilience: How many faults your system can tolerate. can you system bounce back when things are back on track.
+ --@Value("${api.key}")  to read value of 'api.key' from property file.
+ --Problems with MS 
+ --1. what if a MS goes down :  create duplicate instances(have them run on diff machine), if one goes down other will take its place. Service discovery handles this.
+ --2. MS instance is slow: Timeout if an api takes more time (partly solves the problem). set Timeout to Spring RestTemplate. Its constructor takes timeout with the help of HttpComponentClientHttpFactory instance
+ --2nd Soln. --> Detect something is wrong --> Take temporary steps to avoid the situation getting worse -->Deactivate the problem component so that it does not affect downstream components (Circuit breaker pattern). 
+ --When to break the circuit -> last n request to consider for decision --> how many of those should fail --> timeout duration
+ --when to add back the circuit -> how long to wait before trying again
+ --what to do when circuit breaks: Have a fall-back. 1. throw an error 2. Return a fall-back default response 3. save the previous responses (cache) and use that when possible
+ --why do we need circuit breakers --> fail fast, Fall-back functionality and Automatic recovery
+ --Hystrix

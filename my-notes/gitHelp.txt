@@ -1,0 +1,89 @@
+git push origin --delete branch name  ---> to delete remote branch
+git branch -d branch name -----> to delete local branch
+git push -u origin branch name  ----> to push local branch to remote
+git checkout -b bugfix/TP-347639-WS-Error-Api develop
+git config --global user.name "Rajesh kumar"
+git config --global user.email "email-id" 
+git config --global color.ui auto
+git stash drop stash@{n} to drop a given stash
+git commit --amend -m "new commit message"   ---->  to ammend commit message after commit
+git commit --amend  -----> to add new staged file in last commit without making commit
+git log | diff | log --stat
+git cherry-pick hash copied from other branch  ----> To move a commit from one branch to other(use git log for getting the hash)
+git reset --soft hash ---> sets  the commit to specified hash and keeps the changes in staging area
+git reset hash (--mixed is default) sets the commit to specified hash and keeps changes in working dir
+git reset --hard hash ---> sets the commit to specified hash and removes all the tracked changes
+git push -f origin <last_known_good_commit>:<branch_name> to delete a commit from remote
+git clean -df --> d removes untracked directories and f removes untrackedfiles
+git reflog --> to recover file from reset --hard, grab a hash reflog and then git checkout hash
+git revert does not modify or delete existing commit, it just creates a new commit on top of those that completly undo those changes so history remains intact.
+git revert hash which is to be reverted
+git diff hash hash to compare to commits
+git reset --keep HEAD@{1} ---to discard last pull
+git config --get remote.origin.url
+git config --global user.name "Rajesh Kumar" | to see existing name use same command without "Rajesh Kumar"
+git branch -m old_branch new_branch         # Rename branch locally    
+git push origin :old_branch                 # Delete the old branch    
+git push --set-upstream origin new_branch   # Push the new branch, set local branch to track the new remote
+git push -f origin hash:branch name ---> to reset remote commit
+git merge --squash feature --> it sums up all the commits of feature branch into last commit and merges with master branch as one commit from feature. perform git commit after merge.
+git merge featurbranch-> from master
+git rebase master -->  from feature branch. When you rebase a branch onto another branch, you apply the commits from the first branch on top of the HEAD commit in the second branch.
+git rm $(git ls-files --deleted)
+git reset --soft HEAD~3 && git commit -m "new message"
+git push --force-with-lease origin
+git checkout $(git ls-files -d) ---Use git ls-files to checkout deleted(-d) or modified(-m) files.
+For host authencity error ----> ssh -vt <user>@<hostname> <----->For Example: ssh -vt git@mygithub.com
+netstat -ano | findstr :yourPortNumber
+taskkill /PID typeyourPIDhere /F
+netstat -nlp | grep 9191 on linux
+<--- fatal: index file smaller than expected --->
+rm .git/index
+git add .
+to generate sshkey: ssh-keygen -t rsa -C "your_email@example.com"
+on error Agent admitted failure to sign using the key. Permission denied (publickey).
+ssh-add ~/.ssh/id_rsa --> run this in command prompt
+npm list -g --depth=0
+systemctl status nginx.service
+service nginx status
+/usr/sbin/setsebool httpd_can_network_connect true
+lsof -i :Port number  --> to find PID in linux
+--------------------------------------------
+Ctrl+Shift+F12 - hide all windows except the active editor;
+Ctrl+Y - delete a line;
+Ctrl+X - cut a line;
+Ctrl+V - paste a line;
+Ctrl+Shift+Up - move a statement; 
+Ctrl+C - copy a whole line;
+Ctrl+D - duplicate a line; 
+Ctrl+Shift+J - smart line join;
+Ctrl+Enter - smart line split;
+Ctrl+W - extend selection
+Ctrl+Shift+W - shrink selection;
+Alt+Shift+Insert - enable column selection mode;
+F3 - find next;
+Ctrl+Alt+Shift+J - select all occurrences;
+Ctrl+Shift+V - paste from recent buffers
+Ctrl+Shift+O - load maven changes
+Ctrl+Shift+space - smart completion
+[\r\n]+ regex to have data in one line in notepad++
+del /S /Q *-en.srt *-es.srt *-pt.srt
+--------------------------------------------
+mvn clean install -Dmaven.test.skip=true
+mvn  -Pdefault,deploy_ear -Dmaven.test.skip=true
+mvn versions:display-dependency-updates
+mvn dependency:tree | grep javassist
+mvn dependency:tree -Ddetail=true
+mvn dependency:tree >location/out.log
+find / -type f -name fimeName
+readlink -f $(which java)
+vi ~/.bash_profile
+source ~/.bashrc 
+sudo alternatives --config java
+export JAVA_HOME=path to JDK
+tail -f logfile.log
+disracpc4.zopune1@sbi.co.in
+
+
+https://www.freetutorialsus.com/microfrontends-with-react-a-complete-developers-guide/
+https://www.freetutorialsus.com/mean-stack-bootcamp-2021-become-job-ready-dev/
